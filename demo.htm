@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>JS1k 2019 - NNNN - TITLE</title>
+	<meta content="YOU" name="author">
+	<!--
+	<link rel="stylesheet" href="shim.css">
+	-->
+	<style>
+body,html,iframe{margin:0;padding:0;border:0;width:100%;height:100%}
+iframe{position:absolute;top:0;left:0;padding-top:50px;box-sizing:border-box}
+header{position:relative;z-index:1;height:47px;padding-top:2px;border-bottom:1px solid #000;box-shadow:0 -10px 25px #ccc inset;background-color:#eee}
+aside,div,h1,p{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-align:center;font-size:16px;font-weight:inherit;line-height:22px;padding:0;margin:0;cursor:default}
+aside,h1{display:inline}
+a{color:#000;text-decoration:none;border-bottom:1px dashed #000}
+a:hover{border-bottom:1px solid red}
+.button{float:left;width:40px;height:40px;line-height:40px;text-align:center;padding:0;margin:2px 0 0 10px;border:1px solid #888;border-color:#ddd #888 #888 #ddd;font-family:sans-serif;font-size:30px;font-weight:700;cursor:pointer}
+.button:hover{color:red;border-bottom-color:#888}
+	</style>
+</head>
+<body>
+	<header>
+		<a class="button" href="#">&#8606;</a><a class="button" href="#">	&#8608;</a>
+		<a class="button" id="reload" style="margin-right:10px">&#8635;</a>
+		<div>
+			<h1><a href="#">JS1k</a> <a href="#">2019</a> <strong></strong> demo — "TITLE" by YOU</h1>
+			<aside>
+				— 1024 bytes — <a href="#/details/NNNN">demo details</a> — <a href="#/demos">list of demos</a> — <a href="https://js1k.com/NNNN" rel="nofollow" title="short link for your mobile devices">js1k.com/NNNN</a>
+			</aside>
+		</div>
+		<p><em>FIRST PART OF YOUR DESC GOES HERE</em></p>
+	</header>
+	<script>
+		//configurables:
+		const TOKEN_CANVAS_SHIM=true,//(2d/3d). other settings are ignored if this is false.
+		TOKEN_WEBGL=true,// true enables webgl shim (exposes `g`), false enables canvas shim (exposes `c`)
+		TOKEN_MAX_WIDTH=512,//px, 0 means always 100%
+		TOKEN_MAX_HEIGHT=512,//px, 0 means always 100%
+		TOKEN_LOCK_RATIO=true,//be smaller than specified if viewport is smaller?
+		TOKEN_CENTER_CANVAS=true,//only if width<100%
+		TOKEN_RELOAD_ONORIENTATIONCHANGE=true;//"press" reload button on orientation change?
+		//shim.js
+		(d=>{
+			let f=(a,b,c)=>{const e=a.appendChild(d.createElement(b));e.id=b;if(c){e.setAttribute('style',c)};return e},
+			x='margin:0;padding:0;border:0;';
+			//
+			const w=d.defaultView,
+			Iframe=f(d.body,'iframe'),
+			iWin=Iframe.contentWindow,
+			iDoc=iWin.d=iWin.document,
+			Html=f(d.createDocumentFragment(),'html',TOKEN_CANVAS_SHIM?x+'width:100%;height:100%;':x);
+			f((x=f(Html,'body',x)),'canvas','display:block;'+(TOKEN_CENTER_CANVAS?'margin:auto;':'')),
+			f(x,'script');
+			x=null;
+			//
+			//w.addEventListener('resize',f=()=>{w.location.reload()});//todo:debounce
+			d.getElementById('reload').addEventListener('click',f);
+			//if(TOKEN_RELOAD_ONORIENTATIONCHANGE){w.addEventListener('orientationchange',f)};
+			f=null;
+			//
+			with(Iframe.contentWindow){
+				AudioContext=AudioContext||webkitAudioContext;
+				requestAnimationFrame=requestAnimationFrame||mozRequestAnimationFrame||webkitRequestAnimationFrame||msRequestAnimationFrame||(f=>{setTimeout(f,33)});
+				if(OscillatorNode){with(OscillatorNode.prototype){start=start||noteOn;stop=stop||noteOff}};
+				with(navigator){getUserMedia=getUserMedia||webkitGetUserMedia||mozGetUserMedia||msGetUserMedia}
+			};
+			//
+			iDoc.firstElementChild.replaceWith(Html.cloneNode(true));
+			//
+			iWin.b=iDoc.body;
+			//
+			if(TOKEN_CANVAS_SHIM){
+				const M=Math,Max=M.max,Min=M.min,a=TOKEN_MAX_WIDTH,b=TOKEN_MAX_HEIGHT,canvas=iWin.a=iDoc.getElementById('canvas');
+				canvas.requestPointerLock=canvas.requestPointerLock||canvas.mozRequestPointerLock||canvas.webkitRequestPointerLock;
+				let r=iWin.innerWidth,l=Max(Min(a||r,r),1),x=canvas.style;
+				r=iWin.innerHeight-50;
+				r=Max(Min(b||r,r),1);
+				if(TOKEN_LOCK_RATIO){if(l<a){r=l/a*b}else if(r<b){l=r/b*a}};
+				x.width=(canvas.width=l)+'px';
+				x.height=(canvas.height=r)+'px';
+				if(TOKEN_WEBGL){
+					x=Iframe.init;
+					iWin.removeEventListener('orientationchange',x);
+					iWin.removeEventListener('resize',x);
+					try{
+						x={antialias:true,stencil:true};
+						x=iWin.g=canvas.getContext('webgl',x)||canvas.getContext('experimental-webgl',x);
+						iWin.__glExts=['OES_texture_float','OES_texture_float_linear','OES_standard_derivatives','EXT_texture_filter_anisotropic','MOZ_EXT_texture_filter_anisotropic','WEBKIT_EXT_texture_filter_anisotropic','WEBGL_compressed_texture_s3tc','MOZ_WEBGL_compressed_texture_s3tc','WEBKIT_WEBGL_compressed_texture_s3tc'].map(s=>x.getExtension(s))
+					}catch(noWebGL){
+						iWin.a=iWin.b=iWin.c=iWin.d=iWin.g=null;
+						throw noWebGL
+					}
+				}else{
+					iWin.c=canvas.getContext('2d');
+				}
+			};
+			x='demo.js';
+			/*
+			x=w.location.search;
+			if(x.length){
+				x=new iWin.URLSearchParams(x).get('n');
+				if(x.length){x+='.js'}else{x='empty.js'}
+			}else{
+				x='empty.js'
+			};
+			*/
+			(iWin.theScript=iDoc.getElementById('script')).src=x;
+			x=null;
+		})(document);
+	</script>
+</body>
+</html>
